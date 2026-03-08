@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "functions": {
+    "api/send.js": {
+      "maxDuration": 15,
+      "memory": 256
+    }
+  },
+  "rewrites": [
+    { "source": "/api/send", "destination": "/api/send" },
+    { "source": "/(.*)",     "destination": "/index.html" }
+  ]
+}

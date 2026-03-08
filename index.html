@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PostCardiB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Special+Elite&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:        #C62828;
+      --dark-red:   #7F0000;
+      --red-mid:    #D32F2F;
+      --yellow:     #FFB300;
+      --amber:      #FF8F00;
+      --cream:      #FFF9F0;
+      --paper:      #FFFFFF;
+      --ruled:      #FFCDD2;
+      --ink:        #1A1A1A;
+      --ink-soft:   #4E342E;
+      --gold:       #F9A825;
+    }
+
+    /* ── AIRMAIL STRIPE (top of page) ── */
+    body::before {
+      content: '';
+      display: block;
+      height: 7px;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--red)    0px,  var(--red)    9px,
+        var(--yellow) 9px,  var(--yellow) 18px
+      );
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+    }
+
+    body {
+      font-family: 'Noto Serif', Georgia, serif;
+      background: var(--cream);
+      background-image:
+        radial-gradient(circle at 100% 0%,   rgba(198,40,40,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 0%   100%, rgba(255,179,0,0.08)  0%, transparent 50%);
+      min-height: 100vh;
+      color: var(--ink);
+      padding-top: 7px; /* airmail stripe offset */
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--dark-red);
+      padding: 0 40px;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--yellow);
+    }
+
+    /* Logo */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .logo-emblem {
+      width: 48px;
+      height: 48px;
+      background: var(--yellow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .logo-text-wrap { display: flex; flex-direction: column; }
+    .logo-en {
+      font-family: 'Rozha One', serif;
+      color: #FFFFFF;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+    .logo-hi {
+      font-family: 'Noto Serif', serif;
+      color: var(--yellow);
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      margin-top: 3px;
+      font-style: italic;
+    }
+
+    /* Nav */
+    nav { display: flex; align-items: center; gap: 6px; }
+    nav button {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      padding: 9px 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+      align-self: center;
+    }
+    nav button:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.4);
+    }
+    nav button.active {
+      background: var(--yellow);
+      color: var(--dark-red);
+      border-color: var(--yellow);
+      font-weight: bold;
+    }
+
+    /* ── SECTIONS ── */
+    section { display: none; padding: 44px 24px 70px; max-width: 1100px; margin: 0 auto; }
+    section.active { display: block; }
+
+    /* ── PAGE HEADING ── */
+    .page-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-heading h1 {
+      font-family: 'Rozha One', serif;
+      color: var(--dark-red);
+      font-size: 2rem;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .page-heading p {
+      font-family: 'Noto Serif', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+    .page-heading .deco {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .deco-line {
+      height: 2px;
+      width: 60px;
+      background: repeating-linear-gradient(90deg, var(--red) 0 6px, var(--yellow) 6px 12px);
+    }
+    .deco-diamond {
+      width: 8px; height: 8px;
+      background: var(--red);
+      transform: rotate(45deg);
+    }
+
+    /* ── UPLOAD ZONE ── */
+    .upload-zone {
+      border: 2.5px dashed var(--red);
+      background: rgba(255,255,255,0.8);
+      border-radius: 2px;
+      padding: 52px 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Airmail corner strips */
+    .upload-zone::before, .upload-zone::after {
+      content: '';
+      position: absolute;
+      width: 60px; height: 60px;
+    }
+    .upload-zone::before {
+      top: 0; left: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--red)    0 6px,
+        var(--yellow) 6px 12px
+      );
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+    .upload-zone::after {
+      bottom: 0; right: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--red)    0 6px,
+        var(--yellow) 6px 12px
+      );
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      background: rgba(255,179,0,0.08);
+      border-color: var(--amber);
+    }
+    .upload-icon { font-size: 3.2rem; margin-bottom: 10px; }
+    .upload-zone p {
+      font-family: 'Special Elite', cursive;
+      color: var(--red);
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+    }
+    .upload-zone small {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: #9E9E9E;
+      letter-spacing: 1px;
+      font-family: 'Special Elite', cursive;
+    }
+    #file-input { display: none; }
+
+    /* ── POSTCARD STAGE ── */
+    .postcard-stage {
+      perspective: 1400px;
+      width: 680px;
+      height: 440px;
+      margin: 0 auto 32px;
+    }
+    .postcard-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+    .postcard-inner.flipped { transform: rotateY(180deg); }
+
+    .postcard-front, .postcard-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    /* ─ FRONT ─ */
+    .postcard-front {
+      background: #111;
+      overflow: hidden;
+    }
+    .postcard-front img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .front-vignette {
+      position: absolute; inset: 0;
+      box-shadow: inset 0 0 70px rgba(0,0,0,0.45);
+      pointer-events: none;
+    }
+    /* India-Post style red border frame on front */
+    .front-frame {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .front-frame::before {
+      content: '';
+      position: absolute; inset: 8px;
+      border: 2px solid rgba(255,255,255,0.35);
+    }
+    .front-frame::after {
+      content: '';
+      position: absolute; inset: 12px;
+      border: 1px solid rgba(255,179,0,0.25);
+    }
+    /* Airmail stripe on front left edge */
+    .front-airmail {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 10px;
+      background: repeating-linear-gradient(
+        180deg,
+        var(--red) 0 8px,
+        var(--yellow) 8px 16px
+      );
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .front-label {
+      position: absolute;
+      bottom: 12px; right: 14px;
+      font-family: 'Special Elite', cursive;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.6rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .front-placeholder {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100%; color: #bbb;
+    }
+    .front-placeholder span { font-size: 4rem; }
+    .front-placeholder p {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-top: 14px;
+      color: #999;
+    }
+
+    /* ─ BACK ─ */
+    .postcard-back {
+      background: var(--paper);
+      transform: rotateY(180deg);
+      overflow: hidden;
+      /* ruled lines */
+      background-image: linear-gradient(var(--ruled) 1px, transparent 1px);
+      background-size: 100% 28px;
+      background-position: 0 58px;
+    }
+    /* Back airmail border – top edge */
+    .back-airmail-top {
+      height: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--red) 0 10px,
+        var(--yellow) 10px 20px
+      );
+    }
+    .back-header {
+      background: var(--red);
+      padding: 7px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .back-header-left { display: flex; flex-direction: column; }
+    .back-post-label {
+      font-family: 'Rozha One', serif;
+      color: #fff;
+      font-size: 0.95rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .back-post-hi {
+      font-family: 'Noto Serif', serif;
+      color: var(--yellow);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+    .back-header-right {
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1px;
+      font-family: 'Special Elite', cursive;
+      text-align: right;
+    }
+
+    .back-body {
+      display: flex;
+      height: calc(100% - 47px);
+    }
+    .message-side {
+      flex: 1;
+      padding: 12px 16px;
+      border-right: 2.5px solid var(--red);
+    }
+    .message-side textarea {
+      width: 100%; height: 100%;
+      background: transparent;
+      border: none; outline: none; resize: none;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.88rem;
+      color: var(--ink);
+      line-height: 28px;
+      padding: 0;
+    }
+    .message-side textarea::placeholder {
+      color: #BDBDBD;
+      font-style: italic;
+    }
+
+    .address-side {
+      width: 238px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    /* ── STAMP ── */
+    .stamp-area {
+      position: relative;
+      align-self: flex-end;
+      margin-bottom: 10px;
+      width: 72px;
+      height: 84px;
+      flex-shrink: 0;
+    }
+    .stamp-svg { display: block; }
+    .postmark-svg {
+      position: absolute;
+      top: -6px;
+      left: -14px;
+      pointer-events: none;
+    }
+
+    .to-label {
+      font-family: 'Noto Serif', serif;
+      font-style: italic;
+      font-size: 0.72rem;
+      color: var(--red);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .address-line {
+      border-bottom: 1px solid #EF9A9A;
+      height: 26px;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.68rem;
+      color: var(--ink);
+      padding: 4px 2px;
+      display: flex;
+      align-items: flex-end;
+      letter-spacing: 0.5px;
+      outline: none;
+    }
+    .address-line:focus {
+      border-bottom-color: var(--red);
+      background: rgba(198,40,40,0.03);
+    }
+    .address-line:empty::before {
+      content: attr(data-placeholder);
+      color: #BDBDBD;
+      pointer-events: none;
+    }
+
+    /* ── FLIP HINT ── */
+    .flip-hint {
+      text-align: center;
+      font-family: 'Special Elite', cursive;
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: -8px 0 22px;
+      opacity: 0.6;
+    }
+    .flip-hint::before, .flip-hint::after {
+      content: ' ✦ ';
+      color: var(--yellow);
+    }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 30px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.2s;
+    }
+    .btn:hover::after { background: rgba(255,255,255,0.1); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--red);
+      color: var(--red);
+    }
+    .btn-outline:hover { background: rgba(198,40,40,0.06); }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(198,40,40,0.4);
+    }
+    .btn-primary:hover { background: var(--red-mid); }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--dark-red);
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(255,179,0,0.4);
+    }
+    .btn-yellow:hover { background: var(--amber); color: #fff; }
+
+    .btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+
+    /* ── SEND MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(50,10,10,0.75);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--paper);
+      width: 480px; max-width: 95vw;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+      overflow: hidden;
+      border-top: 7px solid var(--yellow);
+    }
+    .modal-header {
+      background: var(--red);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h2 {
+      font-family: 'Rozha One', serif;
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+    .modal-close {
+      background: none; border: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-body { padding: 28px 24px; }
+    .form-group { margin-bottom: 22px; }
+    .form-group label {
+      display: block;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      background: #fff;
+      border: none;
+      border-bottom: 2px solid #EF9A9A;
+      padding: 10px 4px;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.92rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--red); }
+    .modal-footer {
+      background: #FFF9F0;
+      padding: 16px 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      border-top: 1px solid #FFCCBC;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      background: var(--dark-red);
+      border-left: 4px solid var(--yellow);
+      color: #fff;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      padding: 14px 22px;
+      z-index: 500;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.3s;
+      pointer-events: none;
+      max-width: 320px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── CATALOGUE ── */
+    .catalogue-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 36px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--red);
+      position: relative;
+    }
+    .catalogue-header::after {
+      content: '';
+      position: absolute;
+      bottom: -7px; left: 0; right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--yellow) 0 10px,
+        transparent 10px 16px
+      );
+    }
+    .catalogue-header h1 {
+      font-family: 'Rozha One', serif;
+      color: var(--dark-red);
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+    .catalogue-count {
+      font-family: 'Special Elite', cursive;
+      color: var(--red);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      background: #FFEBEE;
+      padding: 3px 10px;
+      border: 1px solid #FFCDD2;
+    }
+    .catalogue-empty {
+      text-align: center;
+      padding: 90px 20px;
+    }
+    .catalogue-empty .empty-icon {
+      font-size: 4rem;
+      opacity: 0.35;
+    }
+    .catalogue-empty p {
+      font-family: 'Special Elite', cursive;
+      color: #BDBDBD;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      margin-top: 18px;
+      line-height: 1.8;
+    }
+
+    .catalogue-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 32px;
+    }
+    .catalogue-item {
+      cursor: pointer;
+      transition: transform 0.25s;
+    }
+    .catalogue-item:hover { transform: translateY(-8px) rotate(0.4deg); }
+
+    /* Polaroid with India Post red top bar */
+    .polaroid {
+      background: #fff;
+      padding: 0 0 38px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.12);
+      position: relative;
+      border-top: 8px solid var(--red);
+    }
+    .polaroid img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+    }
+    .polaroid-label {
+      position: absolute;
+      bottom: 8px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.65rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.5px;
+      padding: 0 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Yellow "sent" badge */
+    .polaroid-badge {
+      position: absolute;
+      top: -4px; right: 10px;
+      background: var(--yellow);
+      color: var(--dark-red);
+      font-size: 0.55rem;
+      font-family: 'Special Elite', cursive;
+      letter-spacing: 1px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(20,4,4,0.92);
+      z-index: 150;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-card { max-width: 820px; width: 100%; position: relative; }
+    .lightbox-inner { perspective: 1400px; width: 100%; height: 530px; }
+    .lightbox-flip {
+      width: 100%; height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.4,0.2,0.2,1);
+    }
+    .lightbox-flip.flipped { transform: rotateY(180deg); }
+    .lightbox-front, .lightbox-back {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+    .lightbox-front img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .lightbox-back {
+      transform: rotateY(180deg);
+      background: var(--paper);
+      background-image: linear-gradient(var(--ruled) 1px, transparent 1px);
+      background-size: 100% 28px;
+      background-position: 0 58px;
+      overflow: hidden;
+    }
+    .lightbox-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 38px; height: 38px;
+      background: var(--red);
+      border: 2px solid var(--yellow);
+      color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: var(--dark-red); }
+
+    /* Divider decorator used in empty/between sections */
+    .section-divider {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin: 8px 0 32px;
+    }
+    .section-divider span {
+      width: 40px; height: 3px;
+      background: repeating-linear-gradient(90deg, var(--red) 0 5px, var(--yellow) 5px 10px);
+    }
+    .section-divider i { color: var(--yellow); font-style: normal; font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo">
+    <div class="logo-emblem">
+      <!-- Traditional red pillar post box -->
+      <svg viewBox="0 0 32 46" width="30" height="42" xmlns="http://www.w3.org/2000/svg">
+        <!-- Drop shadow -->
+        <ellipse cx="16" cy="44" rx="10" ry="2.5" fill="rgba(0,0,0,0.25)"/>
+        <!-- Base plate -->
+        <rect x="5" y="38" width="22" height="6" rx="2" fill="#6D0000"/>
+        <!-- Body cylinder -->
+        <rect x="6" y="11" width="20" height="28" rx="5" fill="#C62828"/>
+        <!-- Left highlight on cylinder (3D illusion) -->
+        <rect x="6" y="11" width="6" height="28" rx="5" fill="rgba(255,255,255,0.08)"/>
+        <!-- Right shadow on cylinder -->
+        <rect x="22" y="11" width="4" height="28" rx="3" fill="rgba(0,0,0,0.12)"/>
+        <!-- Dome top ellipse -->
+        <ellipse cx="16" cy="11" rx="10" ry="4" fill="#A01010"/>
+        <!-- Upper dome -->
+        <ellipse cx="16" cy="7"  rx="7"  ry="3" fill="#8B0000"/>
+        <!-- Cap top -->
+        <ellipse cx="16" cy="4.5" rx="4.5" ry="2" fill="#7A0000"/>
+        <!-- Finial ball -->
+        <circle cx="16" cy="2.5" r="2.2" fill="#5D0000"/>
+        <circle cx="15.2" cy="1.8" r="0.6" fill="rgba(255,255,255,0.25)"/>
+        <!-- Letter slot -->
+        <rect x="9"  y="20" width="14" height="3" rx="1.5" fill="#3A0000"/>
+        <rect x="9.5" y="20.5" width="13" height="1" rx="0.5" fill="rgba(255,255,255,0.1)"/>
+        <!-- Collection panel (frosted rectangle) -->
+        <rect x="7" y="26" width="18" height="10" rx="2" fill="rgba(0,0,0,0.1)" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+        <!-- Small POST text lines on panel -->
+        <rect x="11" y="29" width="10" height="1.2" rx="0.6" fill="rgba(255,255,255,0.2)"/>
+        <rect x="12" y="31.5" width="8"  height="1"   rx="0.5" fill="rgba(255,255,255,0.15)"/>
+      </svg>
+    </div>
+    <div class="logo-text-wrap">
+      <div class="logo-en">PostCardiB</div>
+      <div class="logo-hi">Your Digital Post Office</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" data-tab="create">Create</button>
+    <button data-tab="catalogue">My Collection</button>
+  </nav>
+</header>
+
+<!-- ── CREATE ── -->
+<section id="create" class="active">
+  <div class="page-heading">
+    <h1>Craft Your Postcard</h1>
+    <p>Upload a photograph &mdash; write your message on the back &mdash; send it with love</p>
+    <div class="deco">
+      <div class="deco-line"></div>
+      <div class="deco-diamond"></div>
+      <div class="deco-line"></div>
+    </div>
+  </div>
+
+  <div class="upload-zone" id="upload-zone">
+    <div class="upload-icon">🏞️</div>
+    <p>Drop your photograph here &nbsp;·&nbsp; or click to browse</p>
+    <small>JPG, PNG, WEBP supported</small>
+    <input type="file" id="file-input" accept="image/*" />
+  </div>
+
+  <div class="postcard-stage" id="postcard-stage" style="display:none">
+    <div class="postcard-inner" id="postcard-inner">
+
+      <!-- FRONT -->
+      <div class="postcard-front" id="postcard-front">
+        <div class="front-placeholder" id="front-placeholder">
+          <span>📷</span>
+          <p>Your photograph will appear here</p>
+        </div>
+        <img id="postcard-img" src="" alt="" style="display:none" />
+        <div class="front-vignette"></div>
+        <div class="front-frame"></div>
+        <div class="front-airmail"></div>
+        <div class="front-label">PostCardiB &nbsp;·&nbsp; Your Digital Post Office</div>
+      </div>
+
+      <!-- BACK -->
+      <div class="postcard-back">
+        <div class="back-airmail-top"></div>
+        <div class="back-header">
+          <div class="back-header-left">
+            <div class="back-post-label">Post Card</div>
+            <div class="back-post-hi">PostCardiB · Your Digital Post Office</div>
+          </div>
+          <div class="back-header-right">
+            ✦ DIGITAL POST ✦
+          </div>
+        </div>
+        <div class="back-body">
+          <div class="message-side">
+            <textarea id="message-text" placeholder="Write your message here...&#10;&#10;Like a letter posted from a distant land." maxlength="2000"></textarea>
+          </div>
+          <div class="address-side">
+            <div class="stamp-area" id="stamp-container">
+              <!-- Illustrated SVG stamp: perforations + vintage engraving + pillar box -->
+              <svg class="stamp-svg" width="72" height="84" viewBox="0 0 72 84" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <mask id="stamp-perf-main">
+                    <rect width="72" height="84" fill="white"/>
+                    <!-- Top perforations -->
+                    <circle cx="0"  cy="0"  r="3.8" fill="black"/><circle cx="8"  cy="0"  r="3.8" fill="black"/>
+                    <circle cx="16" cy="0"  r="3.8" fill="black"/><circle cx="24" cy="0"  r="3.8" fill="black"/>
+                    <circle cx="32" cy="0"  r="3.8" fill="black"/><circle cx="40" cy="0"  r="3.8" fill="black"/>
+                    <circle cx="48" cy="0"  r="3.8" fill="black"/><circle cx="56" cy="0"  r="3.8" fill="black"/>
+                    <circle cx="64" cy="0"  r="3.8" fill="black"/><circle cx="72" cy="0"  r="3.8" fill="black"/>
+                    <!-- Bottom perforations -->
+                    <circle cx="0"  cy="84" r="3.8" fill="black"/><circle cx="8"  cy="84" r="3.8" fill="black"/>
+                    <circle cx="16" cy="84" r="3.8" fill="black"/><circle cx="24" cy="84" r="3.8" fill="black"/>
+                    <circle cx="32" cy="84" r="3.8" fill="black"/><circle cx="40" cy="84" r="3.8" fill="black"/>
+                    <circle cx="48" cy="84" r="3.8" fill="black"/><circle cx="56" cy="84" r="3.8" fill="black"/>
+                    <circle cx="64" cy="84" r="3.8" fill="black"/><circle cx="72" cy="84" r="3.8" fill="black"/>
+                    <!-- Left perforations -->
+                    <circle cx="0" cy="8"  r="3.8" fill="black"/><circle cx="0" cy="16" r="3.8" fill="black"/>
+                    <circle cx="0" cy="24" r="3.8" fill="black"/><circle cx="0" cy="32" r="3.8" fill="black"/>
+                    <circle cx="0" cy="40" r="3.8" fill="black"/><circle cx="0" cy="48" r="3.8" fill="black"/>
+                    <circle cx="0" cy="56" r="3.8" fill="black"/><circle cx="0" cy="64" r="3.8" fill="black"/>
+                    <circle cx="0" cy="72" r="3.8" fill="black"/>
+                    <!-- Right perforations -->
+                    <circle cx="72" cy="8"  r="3.8" fill="black"/><circle cx="72" cy="16" r="3.8" fill="black"/>
+                    <circle cx="72" cy="24" r="3.8" fill="black"/><circle cx="72" cy="32" r="3.8" fill="black"/>
+                    <circle cx="72" cy="40" r="3.8" fill="black"/><circle cx="72" cy="48" r="3.8" fill="black"/>
+                    <circle cx="72" cy="56" r="3.8" fill="black"/><circle cx="72" cy="64" r="3.8" fill="black"/>
+                    <circle cx="72" cy="72" r="3.8" fill="black"/>
+                  </mask>
+                </defs>
+                <g mask="url(#stamp-perf-main)">
+                  <!-- Vintage deep forest green engraving background -->
+                  <rect width="72" height="84" fill="#1B5E20"/>
+                  <!-- Double inner border frame -->
+                  <rect x="6" y="6" width="60" height="72" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+                  <rect x="8.5" y="8.5" width="55" height="67" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                  <!-- ── PILLAR BOX WHITE LINE-ART ── -->
+                  <!-- Base plate -->
+                  <rect x="23" y="62" width="26" height="5" rx="1.5" fill="rgba(255,255,255,0.65)"/>
+                  <!-- Body cylinder -->
+                  <rect x="25" y="27" width="22" height="36" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.85)" stroke-width="1.2"/>
+                  <!-- Body left highlight -->
+                  <rect x="25" y="27" width="7" height="36" rx="4" fill="rgba(255,255,255,0.07)"/>
+                  <!-- Dome top ellipse -->
+                  <ellipse cx="36" cy="27" rx="11" ry="4"   fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.75)" stroke-width="0.9"/>
+                  <!-- Upper cap -->
+                  <ellipse cx="36" cy="23" rx="8"  ry="2.8" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+                  <!-- Top cap -->
+                  <ellipse cx="36" cy="20.5" rx="5.5" ry="2" fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.55)" stroke-width="0.6"/>
+                  <!-- Finial ball -->
+                  <circle cx="36" cy="18" r="2.5" fill="white"/>
+                  <circle cx="35.2" cy="17.3" r="0.7" fill="rgba(255,255,255,0.5)"/>
+                  <!-- Letter slot -->
+                  <rect x="28.5" y="38" width="15" height="3" rx="1.5" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.45)" stroke-width="0.6"/>
+                  <rect x="29"   y="38.5" width="14" height="1" rx="0.5" fill="rgba(255,255,255,0.12)"/>
+                  <!-- Collection panel -->
+                  <rect x="26.5" y="44" width="19" height="13" rx="1.5" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+                  <line x1="30" y1="48" x2="42" y2="48" stroke="rgba(255,255,255,0.3)"  stroke-width="0.7"/>
+                  <line x1="31" y1="51" x2="41" y2="51" stroke="rgba(255,255,255,0.2)"  stroke-width="0.5"/>
+                  <line x1="32" y1="54" x2="40" y2="54" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                  <!-- Denomination ₹5 -->
+                  <text x="64" y="19" text-anchor="end" font-family="Georgia,serif" font-size="8.5" font-weight="bold" fill="rgba(255,255,255,0.95)">₹5</text>
+                  <!-- INDIA label -->
+                  <text x="9" y="19" font-family="Georgia,serif" font-size="5" fill="rgba(255,255,255,0.7)" letter-spacing="1">INDIA</text>
+                  <!-- Bottom brand -->
+                  <text x="36" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="4.8" fill="rgba(255,255,255,0.85)" letter-spacing="1.8">POSTCARDIB</text>
+                </g>
+              </svg>
+              <!-- Postmark cancellation overlay -->
+              <svg class="postmark-svg" width="82" height="82" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="roughen-main" x="-10%" y="-10%" width="120%" height="120%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
+                  </filter>
+                </defs>
+                <g filter="url(#roughen-main)" opacity="0.8" transform="rotate(-20, 41, 41)">
+                  <!-- Wavy cancel lines left -->
+                  <path d="M 2 36 Q 7 32 11 36 Q 15 40 19 36 Q 23 32 27 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M 2 42 Q 7 38 11 42 Q 15 46 19 42 Q 23 38 27 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M 2 48 Q 7 44 11 48 Q 15 52 19 48 Q 23 44 27 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <!-- Wavy cancel lines right -->
+                  <path d="M 55 36 Q 59 32 63 36 Q 67 40 71 36 Q 75 32 79 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M 55 42 Q 59 38 63 42 Q 67 46 71 42 Q 75 38 79 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M 55 48 Q 59 44 63 48 Q 67 52 71 48 Q 75 44 79 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                  <!-- Outer ring -->
+                  <circle cx="41" cy="41" r="30" fill="none" stroke="#8B0000" stroke-width="2.2"/>
+                  <!-- Inner ring -->
+                  <circle cx="41" cy="41" r="22" fill="none" stroke="#8B0000" stroke-width="1"/>
+                  <!-- Arc text top -->
+                  <path id="arc-top-main" d="M 16,41 A 25,25 0 0,1 66,41" fill="none"/>
+                  <text font-size="6.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.8">
+                    <textPath href="#arc-top-main" startOffset="6%">PostCardiB</textPath>
+                  </text>
+                  <!-- Arc text bottom -->
+                  <path id="arc-bot-main" d="M 66,41 A 25,25 0 0,1 16,41" fill="none"/>
+                  <text font-size="5.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.5">
+                    <textPath href="#arc-bot-main" startOffset="8%">DIGITAL POST</textPath>
+                  </text>
+                  <!-- Centre year -->
+                  <text x="41" y="39" text-anchor="middle" font-size="7" font-family="Georgia,serif" fill="#8B0000" font-weight="bold" letter-spacing="1">2025</text>
+                  <line x1="28" y1="42" x2="54" y2="42" stroke="#8B0000" stroke-width="0.8" opacity="0.6"/>
+                </g>
+              </svg>
+            </div>
+            <div class="to-label">To,</div>
+            <div class="address-line" contenteditable="true" data-placeholder="Recipient Name"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="flip-hint" id="flip-hint" style="display:none">
+    Click &ldquo;Flip Card&rdquo; to write your message on the back
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-outline" id="btn-flip" disabled>↻ &nbsp;Flip Card</button>
+    <button class="btn btn-primary" id="btn-send" disabled>✉ &nbsp;Send Postcard</button>
+    <button class="btn btn-yellow" id="btn-save" disabled>⊕ &nbsp;Save to Collection</button>
+  </div>
+</section>
+
+<!-- ── CATALOGUE ── -->
+<section id="catalogue">
+  <div class="catalogue-header">
+    <h1>My Collection</h1>
+    <span class="catalogue-count" id="catalogue-count">0 postcards</span>
+  </div>
+  <div class="catalogue-grid" id="catalogue-grid"></div>
+  <div class="catalogue-empty" id="catalogue-empty">
+    <div class="empty-icon">
+      <svg viewBox="0 0 32 46" width="52" height="70" xmlns="http://www.w3.org/2000/svg" style="opacity:0.3">
+        <ellipse cx="16" cy="44" rx="10" ry="2.5" fill="#C62828"/>
+        <rect x="5" y="38" width="22" height="6" rx="2" fill="#6D0000"/>
+        <rect x="6" y="11" width="20" height="28" rx="5" fill="#C62828"/>
+        <rect x="6" y="11" width="6" height="28" rx="5" fill="rgba(255,255,255,0.08)"/>
+        <ellipse cx="16" cy="11" rx="10" ry="4" fill="#A01010"/>
+        <ellipse cx="16" cy="7"  rx="7"  ry="3" fill="#8B0000"/>
+        <ellipse cx="16" cy="4.5" rx="4.5" ry="2" fill="#7A0000"/>
+        <circle cx="16" cy="2.5" r="2.2" fill="#5D0000"/>
+        <rect x="9"  y="20" width="14" height="3" rx="1.5" fill="#3A0000"/>
+        <rect x="7" y="26" width="18" height="10" rx="2" fill="rgba(0,0,0,0.1)"/>
+      </svg>
+    </div>
+    <p>Your collection is empty.<br />Create your first postcard above.</p>
+  </div>
+</section>
+
+<!-- ── SEND MODAL ── -->
+<div class="modal-overlay" id="send-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Send Your Postcard</h2>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Recipient's Name</label>
+        <input type="text" id="recipient-name" placeholder="e.g. Priya Sharma" maxlength="100" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="recipient-email" placeholder="e.g. priya@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Your Name (From)</label>
+        <input type="text" id="sender-name" placeholder="e.g. Rohan Mehta" maxlength="100" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="modal-send">✉ &nbsp;Send via Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-card">
+    <button class="lightbox-close" id="lightbox-close">&times;</button>
+    <div class="lightbox-inner">
+      <div class="lightbox-flip" id="lightbox-flip">
+        <div class="lightbox-front">
+          <img id="lightbox-img" src="" alt="" />
+        </div>
+        <div class="lightbox-back">
+          <div class="back-airmail-top"></div>
+          <div class="back-header">
+            <div class="back-header-left">
+              <div class="back-post-label">Post Card</div>
+              <div class="back-post-hi">PostCardiB · Your Digital Post Office</div>
+            </div>
+            <div class="back-header-right">✦ DIGITAL POST ✦</div>
+          </div>
+          <div class="back-body">
+            <div class="message-side" style="overflow:auto">
+              <div id="lightbox-message" style="font-family:'Special Elite',cursive;font-size:0.88rem;line-height:28px;color:#1A1A1A;white-space:pre-wrap"></div>
+            </div>
+            <div class="address-side">
+              <div class="stamp-area" id="lightbox-stamp-container">
+                <svg class="stamp-svg" width="72" height="84" viewBox="0 0 72 84" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <mask id="stamp-perf-lb">
+                      <rect width="72" height="84" fill="white"/>
+                      <circle cx="0"  cy="0"  r="3.8" fill="black"/><circle cx="8"  cy="0"  r="3.8" fill="black"/>
+                      <circle cx="16" cy="0"  r="3.8" fill="black"/><circle cx="24" cy="0"  r="3.8" fill="black"/>
+                      <circle cx="32" cy="0"  r="3.8" fill="black"/><circle cx="40" cy="0"  r="3.8" fill="black"/>
+                      <circle cx="48" cy="0"  r="3.8" fill="black"/><circle cx="56" cy="0"  r="3.8" fill="black"/>
+                      <circle cx="64" cy="0"  r="3.8" fill="black"/><circle cx="72" cy="0"  r="3.8" fill="black"/>
+                      <circle cx="0"  cy="84" r="3.8" fill="black"/><circle cx="8"  cy="84" r="3.8" fill="black"/>
+                      <circle cx="16" cy="84" r="3.8" fill="black"/><circle cx="24" cy="84" r="3.8" fill="black"/>
+                      <circle cx="32" cy="84" r="3.8" fill="black"/><circle cx="40" cy="84" r="3.8" fill="black"/>
+                      <circle cx="48" cy="84" r="3.8" fill="black"/><circle cx="56" cy="84" r="3.8" fill="black"/>
+                      <circle cx="64" cy="84" r="3.8" fill="black"/><circle cx="72" cy="84" r="3.8" fill="black"/>
+                      <circle cx="0" cy="8"  r="3.8" fill="black"/><circle cx="0" cy="16" r="3.8" fill="black"/>
+                      <circle cx="0" cy="24" r="3.8" fill="black"/><circle cx="0" cy="32" r="3.8" fill="black"/>
+                      <circle cx="0" cy="40" r="3.8" fill="black"/><circle cx="0" cy="48" r="3.8" fill="black"/>
+                      <circle cx="0" cy="56" r="3.8" fill="black"/><circle cx="0" cy="64" r="3.8" fill="black"/>
+                      <circle cx="0" cy="72" r="3.8" fill="black"/>
+                      <circle cx="72" cy="8"  r="3.8" fill="black"/><circle cx="72" cy="16" r="3.8" fill="black"/>
+                      <circle cx="72" cy="24" r="3.8" fill="black"/><circle cx="72" cy="32" r="3.8" fill="black"/>
+                      <circle cx="72" cy="40" r="3.8" fill="black"/><circle cx="72" cy="48" r="3.8" fill="black"/>
+                      <circle cx="72" cy="56" r="3.8" fill="black"/><circle cx="72" cy="64" r="3.8" fill="black"/>
+                      <circle cx="72" cy="72" r="3.8" fill="black"/>
+                    </mask>
+                  </defs>
+                  <g mask="url(#stamp-perf-lb)">
+                    <rect width="72" height="84" fill="#1B5E20"/>
+                    <rect x="6" y="6" width="60" height="72" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+                    <rect x="8.5" y="8.5" width="55" height="67" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                    <rect x="23" y="62" width="26" height="5" rx="1.5" fill="rgba(255,255,255,0.65)"/>
+                    <rect x="25" y="27" width="22" height="36" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.85)" stroke-width="1.2"/>
+                    <rect x="25" y="27" width="7" height="36" rx="4" fill="rgba(255,255,255,0.07)"/>
+                    <ellipse cx="36" cy="27" rx="11" ry="4"   fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.75)" stroke-width="0.9"/>
+                    <ellipse cx="36" cy="23" rx="8"  ry="2.8" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+                    <ellipse cx="36" cy="20.5" rx="5.5" ry="2" fill="rgba(255,255,255,0.28)" stroke="rgba(255,255,255,0.55)" stroke-width="0.6"/>
+                    <circle cx="36" cy="18" r="2.5" fill="white"/>
+                    <circle cx="35.2" cy="17.3" r="0.7" fill="rgba(255,255,255,0.5)"/>
+                    <rect x="28.5" y="38" width="15" height="3" rx="1.5" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.45)" stroke-width="0.6"/>
+                    <rect x="29"   y="38.5" width="14" height="1" rx="0.5" fill="rgba(255,255,255,0.12)"/>
+                    <rect x="26.5" y="44" width="19" height="13" rx="1.5" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+                    <line x1="30" y1="48" x2="42" y2="48" stroke="rgba(255,255,255,0.3)"  stroke-width="0.7"/>
+                    <line x1="31" y1="51" x2="41" y2="51" stroke="rgba(255,255,255,0.2)"  stroke-width="0.5"/>
+                    <line x1="32" y1="54" x2="40" y2="54" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+                    <text x="64" y="19" text-anchor="end" font-family="Georgia,serif" font-size="8.5" font-weight="bold" fill="rgba(255,255,255,0.95)">₹5</text>
+                    <text x="9" y="19" font-family="Georgia,serif" font-size="5" fill="rgba(255,255,255,0.7)" letter-spacing="1">INDIA</text>
+                    <text x="36" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="4.8" fill="rgba(255,255,255,0.85)" letter-spacing="1.8">POSTCARDIB</text>
+                  </g>
+                </svg>
+                <svg class="postmark-svg" width="82" height="82" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <filter id="roughen-lb" x="-10%" y="-10%" width="120%" height="120%">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+                      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
+                    </filter>
+                  </defs>
+                  <g filter="url(#roughen-lb)" opacity="0.8" transform="rotate(-20, 41, 41)">
+                    <path d="M 2 36 Q 7 32 11 36 Q 15 40 19 36 Q 23 32 27 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M 2 42 Q 7 38 11 42 Q 15 46 19 42 Q 23 38 27 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M 2 48 Q 7 44 11 48 Q 15 52 19 48 Q 23 44 27 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M 55 36 Q 59 32 63 36 Q 67 40 71 36 Q 75 32 79 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M 55 42 Q 59 38 63 42 Q 67 46 71 42 Q 75 38 79 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M 55 48 Q 59 44 63 48 Q 67 52 71 48 Q 75 44 79 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+                    <circle cx="41" cy="41" r="30" fill="none" stroke="#8B0000" stroke-width="2.2"/>
+                    <circle cx="41" cy="41" r="22" fill="none" stroke="#8B0000" stroke-width="1"/>
+                    <path id="arc-top-lb" d="M 16,41 A 25,25 0 0,1 66,41" fill="none"/>
+                    <text font-size="6.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.8">
+                      <textPath href="#arc-top-lb" startOffset="6%">PostCardiB</textPath>
+                    </text>
+                    <path id="arc-bot-lb" d="M 66,41 A 25,25 0 0,1 16,41" fill="none"/>
+                    <text font-size="5.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.5">
+                      <textPath href="#arc-bot-lb" startOffset="8%">DIGITAL POST</textPath>
+                    </text>
+                    <text x="41" y="39" text-anchor="middle" font-size="7" font-family="Georgia,serif" fill="#8B0000" font-weight="bold" letter-spacing="1">2025</text>
+                    <line x1="28" y1="42" x2="54" y2="42" stroke="#8B0000" stroke-width="0.8" opacity="0.6"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="to-label">To,</div>
+              <div class="address-line" id="lightbox-recipient">&nbsp;</div>
+              <div class="address-line">&nbsp;</div>
+              <div class="address-line">&nbsp;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lightbox-controls">
+      <button class="btn btn-outline" id="lightbox-flip-btn">↻ &nbsp;Flip Card</button>
+      <button class="btn btn-primary" id="lightbox-delete-btn">🗑 &nbsp;Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── STAMP DATA ────────────────────────────────────────────────────
+  const PERF = [[0,0],[8,0],[16,0],[24,0],[32,0],[40,0],[48,0],[56,0],[64,0],[72,0],
+    [0,84],[8,84],[16,84],[24,84],[32,84],[40,84],[48,84],[56,84],[64,84],[72,84],
+    [0,8],[0,16],[0,24],[0,32],[0,40],[0,48],[0,56],[0,64],[0,72],
+    [72,8],[72,16],[72,24],[72,32],[72,40],[72,48],[72,56],[72,64],[72,72]]
+    .map(([cx,cy]) => `<circle cx="${cx}" cy="${cy}" r="3.8" fill="black"/>`)
+    .join('');
+
+  const STAMPS = [
+    {
+      label: 'TAJ MAHAL', color: '#1B5E20',
+      svg: `<path d="M26 54 Q26 34 36 28 Q46 34 46 54Z" fill="rgba(255,255,255,0.6)"/>
+<line x1="36" y1="28" x2="36" y2="23" stroke="white" stroke-width="1"/><circle cx="36" cy="22" r="1.8" fill="white"/>
+<rect x="14" y="38" width="5" height="16" rx="1" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="16.5" cy="37" rx="2.5" ry="4" fill="rgba(255,255,255,0.6)"/><circle cx="16.5" cy="33" r="1.2" fill="rgba(255,255,255,0.7)"/>
+<rect x="53" y="38" width="5" height="16" rx="1" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="55.5" cy="37" rx="2.5" ry="4" fill="rgba(255,255,255,0.6)"/><circle cx="55.5" cy="33" r="1.2" fill="rgba(255,255,255,0.7)"/>
+<rect x="20" y="54" width="32" height="3" fill="rgba(255,255,255,0.5)"/>
+<rect x="14" y="57" width="44" height="3" fill="rgba(255,255,255,0.4)"/>
+<rect x="10" y="60" width="52" height="2.5" fill="rgba(255,255,255,0.35)"/>
+<path d="M29 54 Q29 42 36 40 Q43 42 43 54" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.35)" stroke-width="0.6"/>
+<path d="M21 54 Q21 49 24 47 Q27 49 27 54" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+<path d="M45 54 Q45 49 48 47 Q51 49 51 54" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>`
+    },
+    {
+      label: 'INDIA GATE', color: '#0D47A1',
+      svg: `<rect x="20" y="42" width="9" height="14" fill="rgba(255,255,255,0.6)"/>
+<rect x="43" y="42" width="9" height="14" fill="rgba(255,255,255,0.6)"/>
+<rect x="17" y="38" width="38" height="5" fill="rgba(255,255,255,0.55)"/>
+<path d="M22 43 Q22 24 36 20 Q50 24 50 43" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+<path d="M27 43 Q27 29 36 26 Q45 29 45 43" fill="rgba(0,0,0,0.15)"/>
+<ellipse cx="36" cy="15" rx="1.8" ry="3.5" fill="rgba(255,255,255,0.85)"/>
+<ellipse cx="36" cy="18" rx="1.2" ry="2" fill="rgba(255,220,100,0.6)"/>
+<rect x="14" y="56" width="44" height="3" fill="rgba(255,255,255,0.45)"/>
+<rect x="11" y="59" width="50" height="2.5" fill="rgba(255,255,255,0.35)"/>`
+    },
+    {
+      label: 'GATEWAY', color: '#880E4F',
+      svg: `<rect x="16" y="26" width="40" height="30" rx="2" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+<path d="M23 56 Q23 30 36 24 Q49 30 49 56" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+<rect x="11" y="28" width="8" height="28" rx="2" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="15" cy="27" rx="4" ry="5" fill="rgba(255,255,255,0.6)"/><circle cx="15" cy="22.5" r="1.8" fill="rgba(255,255,255,0.7)"/>
+<rect x="53" y="28" width="8" height="28" rx="2" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="57" cy="27" rx="4" ry="5" fill="rgba(255,255,255,0.6)"/><circle cx="57" cy="22.5" r="1.8" fill="rgba(255,255,255,0.7)"/>
+<line x1="13" y1="40" x2="59" y2="40" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+<line x1="13" y1="46" x2="59" y2="46" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+<rect x="10" y="56" width="52" height="3.5" fill="rgba(255,255,255,0.4)"/>
+<path d="M10 59.5 Q20 57 30 59.5 Q40 62 50 59.5 Q58 57 62 59.5 L62 63 L10 63Z" fill="rgba(255,255,255,0.18)"/>`
+    },
+    {
+      label: 'LOTUS TEMPLE', color: '#004D40',
+      svg: `<path d="M36 62 Q14 50 13 30 Q24 44 36 62" fill="rgba(255,255,255,0.28)"/>
+<path d="M36 62 Q58 50 59 30 Q48 44 36 62" fill="rgba(255,255,255,0.28)"/>
+<path d="M36 62 Q16 46 20 22 Q28 40 36 62" fill="rgba(255,255,255,0.42)"/>
+<path d="M36 62 Q56 46 52 22 Q44 40 36 62" fill="rgba(255,255,255,0.42)"/>
+<path d="M36 62 Q20 42 26 24 Q32 42 36 62" fill="rgba(255,255,255,0.55)"/>
+<path d="M36 62 Q52 42 46 24 Q40 42 36 62" fill="rgba(255,255,255,0.55)"/>
+<path d="M36 62 Q24 38 36 18 Q48 38 36 62" fill="rgba(255,255,255,0.68)"/>
+<ellipse cx="36" cy="64" rx="22" ry="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+<path d="M20 65 Q28 63 36 65 Q44 67 52 65" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>`
+    },
+    {
+      label: 'QUTB MINAR', color: '#1A237E',
+      svg: `<path d="M24 66 L28 22 L44 22 L48 66Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.8)" stroke-width="1.1"/>
+<line x1="30" y1="24" x2="26" y2="66" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+<line x1="36" y1="22" x2="36" y2="66" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+<line x1="42" y1="24" x2="46" y2="66" stroke="rgba(255,255,255,0.18)" stroke-width="0.5"/>
+<rect x="26" y="44" width="20" height="3" rx="1" fill="rgba(255,255,255,0.55)"/>
+<rect x="27.5" y="32" width="17" height="2.5" rx="1" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="36" cy="22" rx="8" ry="3" fill="rgba(255,255,255,0.55)"/>
+<ellipse cx="36" cy="19" rx="5.5" ry="2.5" fill="rgba(255,255,255,0.62)"/>
+<ellipse cx="36" cy="16.5" rx="3.5" ry="2" fill="rgba(255,255,255,0.68)"/>
+<circle cx="36" cy="14.5" r="2" fill="white"/>
+<rect x="21" y="66" width="30" height="2.5" fill="rgba(255,255,255,0.5)"/>
+<rect x="18" y="68.5" width="36" height="2" fill="rgba(255,255,255,0.4)"/>`
+    },
+    {
+      label: 'RED FORT', color: '#3E2723',
+      svg: `<rect x="12" y="44" width="48" height="18" fill="rgba(255,255,255,0.48)"/>
+<rect x="12" y="38" width="7" height="7" fill="rgba(255,255,255,0.55)"/>
+<rect x="22" y="38" width="7" height="7" fill="rgba(255,255,255,0.55)"/>
+<rect x="32" y="38" width="7" height="7" fill="rgba(255,255,255,0.55)"/>
+<rect x="42" y="38" width="7" height="7" fill="rgba(255,255,255,0.55)"/>
+<rect x="52" y="38" width="7" height="7" fill="rgba(255,255,255,0.55)"/>
+<path d="M28 62 Q28 48 36 45 Q44 48 44 62Z" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>
+<rect x="11" y="28" width="10" height="16" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="16" cy="27" rx="5" ry="3" fill="rgba(255,255,255,0.58)"/>
+<circle cx="16" cy="24" r="2" fill="rgba(255,255,255,0.68)"/>
+<rect x="51" y="28" width="10" height="16" fill="rgba(255,255,255,0.5)"/>
+<ellipse cx="56" cy="27" rx="5" ry="3" fill="rgba(255,255,255,0.58)"/>
+<circle cx="56" cy="24" r="2" fill="rgba(255,255,255,0.68)"/>
+<rect x="10" y="62" width="52" height="3" fill="rgba(255,255,255,0.38)"/>`
+    },
+    {
+      label: 'HAMPI', color: '#4A148C',
+      svg: `<rect x="24" y="58" width="24" height="8" rx="1" fill="rgba(255,255,255,0.6)"/>
+<rect x="26" y="50" width="20" height="9" fill="rgba(255,255,255,0.55)"/>
+<rect x="28.5" y="43" width="15" height="8" fill="rgba(255,255,255,0.5)"/>
+<rect x="30.5" y="37" width="11" height="7" fill="rgba(255,255,255,0.46)"/>
+<rect x="32" y="32" width="8" height="6" fill="rgba(255,255,255,0.43)"/>
+<rect x="33.5" y="27.5" width="5" height="5" fill="rgba(255,255,255,0.43)"/>
+<path d="M33 27.5 Q36 20 39 27.5Z" fill="rgba(255,255,255,0.72)"/>
+<circle cx="36" cy="19" r="1.5" fill="white"/>
+<line x1="24" y1="58" x2="48" y2="58" stroke="rgba(255,255,255,0.38)" stroke-width="0.8"/>
+<line x1="26" y1="50" x2="46" y2="50" stroke="rgba(255,255,255,0.32)" stroke-width="0.7"/>
+<line x1="28.5" y1="43" x2="43.5" y2="43" stroke="rgba(255,255,255,0.28)" stroke-width="0.6"/>
+<line x1="30.5" y1="37" x2="41.5" y2="37" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+<rect x="20" y="66" width="32" height="2.5" fill="rgba(255,255,255,0.45)"/>
+<rect x="17" y="68.5" width="38" height="2" fill="rgba(255,255,255,0.38)"/>`
+    },
+    {
+      label: 'KONARK', color: '#BF360C',
+      svg: `<circle cx="36" cy="44" r="20" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>
+<circle cx="36" cy="44" r="5" fill="rgba(255,255,255,0.48)" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
+<circle cx="36" cy="44" r="2" fill="white"/>
+<line x1="36" y1="24" x2="36" y2="64" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+<line x1="16" y1="44" x2="56" y2="44" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+<line x1="22" y1="30" x2="50" y2="58" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+<line x1="50" y1="30" x2="22" y2="58" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+<line x1="19" y1="37" x2="53" y2="51" stroke="rgba(255,255,255,0.32)" stroke-width="0.7"/>
+<line x1="53" y1="37" x2="19" y2="51" stroke="rgba(255,255,255,0.32)" stroke-width="0.7"/>
+<line x1="29" y1="24.5" x2="43" y2="63.5" stroke="rgba(255,255,255,0.32)" stroke-width="0.7"/>
+<line x1="43" y1="24.5" x2="29" y2="63.5" stroke="rgba(255,255,255,0.32)" stroke-width="0.7"/>
+<circle cx="36" cy="24" r="2" fill="rgba(255,255,255,0.6)"/><circle cx="36" cy="64" r="2" fill="rgba(255,255,255,0.6)"/>
+<circle cx="16" cy="44" r="2" fill="rgba(255,255,255,0.6)"/><circle cx="56" cy="44" r="2" fill="rgba(255,255,255,0.6)"/>
+<circle cx="22.1" cy="30.1" r="1.5" fill="rgba(255,255,255,0.5)"/><circle cx="49.9" cy="30.1" r="1.5" fill="rgba(255,255,255,0.5)"/>
+<circle cx="22.1" cy="57.9" r="1.5" fill="rgba(255,255,255,0.5)"/><circle cx="49.9" cy="57.9" r="1.5" fill="rgba(255,255,255,0.5)"/>
+<circle cx="36" cy="44" r="13" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.5" stroke-dasharray="2.5,2.5"/>
+<rect x="16" y="64" width="40" height="4" rx="1" fill="rgba(255,255,255,0.38)"/>`
+    }
+  ];
+
+  function buildStampHTML(idx, sfx) {
+    const d = STAMPS[idx % STAMPS.length];
+    const mid = `sp-${sfx}`, fid = `rf-${sfx}`, tid = `at-${sfx}`, bid = `ab-${sfx}`;
+    return `
+      <svg class="stamp-svg" width="72" height="84" viewBox="0 0 72 84" xmlns="http://www.w3.org/2000/svg">
+        <defs><mask id="${mid}"><rect width="72" height="84" fill="white"/>${PERF}</mask></defs>
+        <g mask="url(#${mid})">
+          <rect width="72" height="84" fill="${d.color}"/>
+          <rect x="6" y="6" width="60" height="72" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+          <rect x="8.5" y="8.5" width="55" height="67" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.4"/>
+          ${d.svg}
+          <text x="64" y="19" text-anchor="end" font-family="Georgia,serif" font-size="8.5" font-weight="bold" fill="rgba(255,255,255,0.95)">₹5</text>
+          <text x="9" y="19" font-family="Georgia,serif" font-size="4.8" fill="rgba(255,255,255,0.7)" letter-spacing="1">INDIA</text>
+          <text x="36" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="4.2" fill="rgba(255,255,255,0.85)" letter-spacing="1.5">${d.label}</text>
+        </g>
+      </svg>
+      <svg class="postmark-svg" width="82" height="82" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="${fid}" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
+        </filter></defs>
+        <g filter="url(#${fid})" opacity="0.8" transform="rotate(-20,41,41)">
+          <path d="M2 36 Q7 32 11 36 Q15 40 19 36 Q23 32 27 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M2 42 Q7 38 11 42 Q15 46 19 42 Q23 38 27 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M2 48 Q7 44 11 48 Q15 52 19 48 Q23 44 27 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M55 36 Q59 32 63 36 Q67 40 71 36 Q75 32 79 36" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M55 42 Q59 38 63 42 Q67 46 71 42 Q75 38 79 42" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M55 48 Q59 44 63 48 Q67 52 71 48 Q75 44 79 48" fill="none" stroke="#8B0000" stroke-width="1.7" stroke-linecap="round"/>
+          <circle cx="41" cy="41" r="30" fill="none" stroke="#8B0000" stroke-width="2.2"/>
+          <circle cx="41" cy="41" r="22" fill="none" stroke="#8B0000" stroke-width="1"/>
+          <path id="${tid}" d="M16,41 A25,25 0 0,1 66,41" fill="none"/>
+          <text font-size="6.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.8"><textPath href="#${tid}" startOffset="6%">PostCardiB</textPath></text>
+          <path id="${bid}" d="M66,41 A25,25 0 0,1 16,41" fill="none"/>
+          <text font-size="5.5" font-family="Georgia,serif" fill="#8B0000" letter-spacing="0.5"><textPath href="#${bid}" startOffset="8%">DIGITAL POST</textPath></text>
+          <text x="41" y="39" text-anchor="middle" font-size="7" font-family="Georgia,serif" fill="#8B0000" font-weight="bold" letter-spacing="1">2025</text>
+          <line x1="28" y1="42" x2="54" y2="42" stroke="#8B0000" stroke-width="0.8" opacity="0.6"/>
+        </g>
+      </svg>`;
+  }
+
+  function renderStamp(idx, containerId, sfx) {
+    const el = document.getElementById(containerId);
+    if (el) el.innerHTML = buildStampHTML(idx, sfx);
+  }
+
+  // ── STATE ──────────────────────────────────────────────────────────
+  let currentImage = null;
+  let currentStampIndex = 0;
+  let isFlipped = false;
+  let catalogue = JSON.parse(localStorage.getItem('postcards') || '[]');
+  let lightboxIndex = null;
+  let lightboxFlipped = false;
+
+  // ── HELPERS ────────────────────────────────────────────────────────
+  function toast(msg, duration = 3200) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), duration);
+  }
+
+  function saveCatalogue() {
+    localStorage.setItem('postcards', JSON.stringify(catalogue));
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // ── TABS ───────────────────────────────────────────────────────────
+  document.querySelectorAll('nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      if (btn.dataset.tab === 'catalogue') renderCatalogue();
+    });
+  });
+
+  // ── UPLOAD ────────────────────────────────────────────────────────
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput  = document.getElementById('file-input');
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadImage(file);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) loadImage(e.target.files[0]);
+  });
+
+  function loadImage(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      currentImage = ev.target.result;
+      currentStampIndex = Math.floor(Math.random() * STAMPS.length);
+      renderStamp(currentStampIndex, 'stamp-container', 'main');
+      const img = document.getElementById('postcard-img');
+      img.src = currentImage;
+      img.style.display = 'block';
+      document.getElementById('front-placeholder').style.display = 'none';
+      uploadZone.style.display = 'none';
+      document.getElementById('postcard-stage').style.display = 'block';
+      document.getElementById('flip-hint').style.display = 'block';
+      document.getElementById('btn-flip').disabled = false;
+      document.getElementById('btn-send').disabled = false;
+      document.getElementById('btn-save').disabled = false;
+      isFlipped = false;
+      document.getElementById('postcard-inner').classList.remove('flipped');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── FLIP ──────────────────────────────────────────────────────────
+  document.getElementById('btn-flip').addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    document.getElementById('postcard-inner').classList.toggle('flipped', isFlipped);
+    document.getElementById('btn-flip').textContent = isFlipped ? '⤾  Flip to Front' : '↻  Flip Card';
+    document.getElementById('flip-hint').style.display = isFlipped ? 'none' : 'block';
+  });
+
+  // ── SAVE ──────────────────────────────────────────────────────────
+  document.getElementById('btn-save').addEventListener('click', () => {
+    if (!currentImage) return;
+    const message = document.getElementById('message-text').value.trim();
+    catalogue.unshift({ id: Date.now(), image: currentImage, message, date: new Date().toISOString(), recipient: '', sent: false, stampIndex: currentStampIndex });
+    saveCatalogue();
+    toast('Postcard saved to your collection!');
+  });
+
+  // ── SEND MODAL ────────────────────────────────────────────────────
+  document.getElementById('btn-send').addEventListener('click', () => document.getElementById('send-modal').classList.add('open'));
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-cancel').addEventListener('click', closeModal);
+  document.getElementById('send-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+  function closeModal() { document.getElementById('send-modal').classList.remove('open'); }
+
+  document.getElementById('modal-send').addEventListener('click', () => {
+    const name  = document.getElementById('recipient-name').value.trim();
+    const email = document.getElementById('recipient-email').value.trim();
+    const from  = document.getElementById('sender-name').value.trim();
+    const msg   = document.getElementById('message-text').value.trim();
+    if (!email) { toast('Please enter a recipient email address.'); return; }
+    sendViaAPI({ name, email, from, msg });
+  });
+
+  async function sendViaAPI({ name, email, from, msg }) {
+    const sendBtn = document.getElementById('modal-send');
+    const originalHTML = sendBtn.innerHTML;
+    sendBtn.innerHTML = '⏳ &nbsp;Sending...';
+    sendBtn.disabled = true;
+
+    try {
+      const compressed = await compressImage(currentImage);
+
+      const res = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to:            email,
+          recipientName: name,
+          senderName:    from,
+          message:       msg,
+          imageBase64:   compressed,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+
+      catalogue.unshift({ id: Date.now(), image: currentImage, message: msg, date: new Date().toISOString(), recipient: name || email, sent: true, stampIndex: currentStampIndex });
+      saveCatalogue();
+      closeModal();
+      toast('Postcard delivered! ✉', 4000);
+
+    } catch (err) {
+      toast('Could not send: ' + err.message, 5000);
+    } finally {
+      sendBtn.innerHTML = originalHTML;
+      sendBtn.disabled = false;
+    }
+  }
+
+  // Compress uploaded image before sending (keeps payload < 1 MB)
+  function compressImage(dataUrl, maxWidth = 1200) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const scale  = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(img.width  * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.src = dataUrl;
+    });
+  }
+
+  // ── CATALOGUE ─────────────────────────────────────────────────────
+  function renderCatalogue() {
+    const grid  = document.getElementById('catalogue-grid');
+    const empty = document.getElementById('catalogue-empty');
+    const count = document.getElementById('catalogue-count');
+
+    count.textContent = `${catalogue.length} postcard${catalogue.length !== 1 ? 's' : ''}`;
+
+    if (catalogue.length === 0) {
+      grid.style.display  = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+    grid.style.display  = 'grid';
+    empty.style.display = 'none';
+
+    grid.innerHTML = catalogue.map((pc, i) => `
+      <div class="catalogue-item" data-index="${i}">
+        <div class="polaroid">
+          <img src="${pc.image}" alt="Postcard ${i + 1}" loading="lazy" />
+          <div class="polaroid-label">${formatDate(pc.date)}${pc.recipient ? ' · ' + pc.recipient : ''}</div>
+          ${pc.sent ? '<div class="polaroid-badge">SENT ✉</div>' : ''}
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.catalogue-item').forEach(item => {
+      item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+    });
+  }
+
+  // ── LIGHTBOX ──────────────────────────────────────────────────────
+  function openLightbox(index) {
+    lightboxIndex = index;
+    lightboxFlipped = false;
+    const pc = catalogue[index];
+    document.getElementById('lightbox-img').src = pc.image;
+    document.getElementById('lightbox-message').textContent = pc.message || '(No message written.)';
+    document.getElementById('lightbox-recipient').textContent = pc.recipient ? pc.recipient : 'Recipient Name';
+    renderStamp(pc.stampIndex ?? 0, 'lightbox-stamp-container', 'lb');
+    document.getElementById('lightbox-flip').classList.remove('flipped');
+    document.getElementById('lightbox-flip-btn').textContent = '↻  Flip Card';
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  document.getElementById('lightbox-close').addEventListener('click', () => document.getElementById('lightbox').classList.remove('open'));
+  document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('lightbox').classList.remove('open'); });
+
+  document.getElementById('lightbox-flip-btn').addEventListener('click', () => {
+    lightboxFlipped = !lightboxFlipped;
+    document.getElementById('lightbox-flip').classList.toggle('flipped', lightboxFlipped);
+    document.getElementById('lightbox-flip-btn').textContent = lightboxFlipped ? '⤾  Flip to Front' : '↻  Flip Card';
+  });
+
+  document.getElementById('lightbox-delete-btn').addEventListener('click', () => {
+    if (lightboxIndex === null) return;
+    if (!confirm('Remove this postcard from your collection?')) return;
+    catalogue.splice(lightboxIndex, 1);
+    saveCatalogue();
+    document.getElementById('lightbox').classList.remove('open');
+    renderCatalogue();
+    toast('Postcard removed from collection.');
+  });
+</script>
+</body>
+</html>
