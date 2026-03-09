@@ -1,5 +1,4 @@
-const { Resend }   = require('resend');
-const { put, del } = require('@vercel/blob');
+const { Resend } = require('resend');
 
 const resend      = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL  = process.env.FROM_EMAIL    || 'PostCardiB <onboarding@resend.dev>';
@@ -93,17 +92,10 @@ module.exports = async function handler(req, res) {
   const safeMessage   = sanitise(message,       MAX_MESSAGE_LEN);
   const safeTo        = to.trim().toLowerCase();
 
-  let blobUrl = null;
   try {
-    // 1. Upload image to Vercel Blob
-    const ext  = detectedMime.split('/')[1];
-    const blob = await put(`postcards/${Date.now()}.${ext}`, imageBuffer, {
-      access:      'public',
-      contentType: detectedMime,
-    });
-    blobUrl = blob.url;
+    const ext = detectedMime.split('/')[1];
 
-    // 2. Send email
+    // Send image as inline CID attachment — no external storage needed
     const emailPayload = {
       from:    FROM_EMAIL,
       to:      [safeTo],
@@ -113,22 +105,23 @@ module.exports = async function handler(req, res) {
         senderName:    safeSender,
         message:       safeMessage,
         to:            safeTo,
-        imageUrl:      blobUrl,
+        imageUrl:      'cid:postcard-image',
       }),
+      attachments: [{
+        filename:   `postcard.${ext}`,
+        content:    imageBuffer.toString('base64'),
+        content_id: 'postcard-image',
+      }],
     };
     if (REPLY_TO) emailPayload.reply_to = REPLY_TO;
 
     const { data, error } = await resend.emails.send(emailPayload);
     if (error) throw new Error(error.message);
 
-    // 3. Delete blob after 1 hour (fire-and-forget)
-    setTimeout(() => del(blobUrl).catch(() => {}), 60 * 60 * 1000);
-
     return res.status(200).json({ success: true, id: data?.id });
 
   } catch (err) {
     console.error('[PostCardiB] send error:', err.message);
-    if (blobUrl) del(blobUrl).catch(() => {});
     return res.status(500).json({ error: 'Failed to send. Please try again.' });
   }
 };
