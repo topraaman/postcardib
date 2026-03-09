@@ -3,6 +3,7 @@ const { put, del } = require('@vercel/blob');
 
 const resend      = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL  = process.env.FROM_EMAIL  || 'PostCardiB <onboarding@resend.dev>';
+const REPLY_TO    = process.env.REPLY_TO_EMAIL || 'ramprasaddevaraj@gmail.com';
 // Set ALLOWED_ORIGIN to your Vercel URL in production, e.g. https://postcardib.vercel.app
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
 
@@ -89,9 +90,10 @@ module.exports = async function handler(req, res) {
 
     // 2. Send email — image renders inline via https://, zero attachments
     const { data, error } = await resend.emails.send({
-      from:    FROM_EMAIL,
-      to:      [safeTo],
-      subject: `A Postcard for you${safeRecipient ? ', ' + safeRecipient : ''} — PostCardiB`,
+      from:     FROM_EMAIL,
+      to:       [safeTo],
+      reply_to: REPLY_TO,
+      subject:  `📮 A Postcard for you${safeRecipient ? ', ' + safeRecipient : ''} — PostCardiB`,
       html:    buildEmailHTML({
         recipientName: safeRecipient,
         senderName:    safeSender,
