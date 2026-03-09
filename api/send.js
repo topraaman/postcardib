@@ -2,16 +2,19 @@ const { Resend }   = require('resend');
 const { put, del } = require('@vercel/blob');
 
 const resend      = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL  = process.env.FROM_EMAIL  || 'PostCardiB <onboarding@resend.dev>';
-const REPLY_TO    = process.env.REPLY_TO_EMAIL || 'ramprasaddevaraj@gmail.com';
-// Set ALLOWED_ORIGIN to your Vercel URL in production, e.g. https://postcardib.vercel.app
+const FROM_EMAIL  = process.env.FROM_EMAIL    || 'PostCardiB <onboarding@resend.dev>';
+const REPLY_TO    = process.env.REPLY_TO_EMAIL;   // no hardcoded fallback
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
 
 // ── Validation constants ───────────────────────────────────────────────────
-const EMAIL_RE          = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const MAX_IMAGE_BYTES   = 4 * 1024 * 1024;   // 4 MB base64 string length
-const MAX_NAME_LEN      = 100;
-const MAX_MESSAGE_LEN   = 2000;
+const EMAIL_RE        = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;   // 4 MB base64 string length
+const MAX_NAME_LEN    = 100;
+const MAX_MESSAGE_LEN = 2000;
+
+// Allowed image MIME types (must match data URI prefix)
+const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MIME_RE      = /^data:(image\/(?:jpeg|png|webp|gif));base64,/;
 
 // ── Rate limiting (module-level, best-effort per serverless instance) ──────
 const rateMap = new Map();   // ip → { count, resetAt }
@@ -32,7 +35,12 @@ function isRateLimited(ip) {
 
 // ── Handler ───────────────────────────────────────────────────────────────
 module.exports = async function handler(req, res) {
-  // CORS — restrict to your deployed origin in production
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+  // CORS — restrict to deployed origin in production
   res.setHeader('Access-Control-Allow-Origin',  ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -57,6 +65,11 @@ module.exports = async function handler(req, res) {
   if (!imageBase64 || typeof imageBase64 !== 'string')
     return res.status(400).json({ error: 'Postcard image is required.' });
 
+  // Validate image MIME type from data URI
+  const mimeMatch = imageBase64.match(MIME_RE);
+  if (!mimeMatch || !ALLOWED_MIME.includes(mimeMatch[1]))
+    return res.status(400).json({ error: 'Invalid image type. Use JPG, PNG, WEBP or GIF.' });
+
   if (imageBase64.length > MAX_IMAGE_BYTES)
     return res.status(413).json({ error: 'Image is too large. Please use a smaller photo.' });
 
@@ -70,30 +83,31 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Message is too long (max 2000 characters).' });
 
   // ── Process ─────────────────────────────────────────────────────────────
-  const base64Data  = imageBase64.replace(/^data:image\/\w+;base64,/, '');
-  const imageBuffer = Buffer.from(base64Data, 'base64');
+  const detectedMime = mimeMatch[1];
+  const base64Data   = imageBase64.replace(MIME_RE, '');
+  const imageBuffer  = Buffer.from(base64Data, 'base64');
 
-  // Sanitise text inputs
-  const safeRecipient = sanitise(recipientName);
-  const safeSender    = sanitise(senderName);
-  const safeMessage   = sanitise(message);
+  // Sanitise text inputs with correct max lengths
+  const safeRecipient = sanitise(recipientName, MAX_NAME_LEN);
+  const safeSender    = sanitise(senderName,    MAX_NAME_LEN);
+  const safeMessage   = sanitise(message,       MAX_MESSAGE_LEN);
   const safeTo        = to.trim().toLowerCase();
 
   let blobUrl = null;
   try {
-    // 1. Upload image to Vercel Blob → plain https:// URL (no email attachment)
-    const blob = await put(`postcards/${Date.now()}.jpg`, imageBuffer, {
+    // 1. Upload image to Vercel Blob
+    const ext  = detectedMime.split('/')[1];
+    const blob = await put(`postcards/${Date.now()}.${ext}`, imageBuffer, {
       access:      'public',
-      contentType: 'image/jpeg',
+      contentType: detectedMime,
     });
     blobUrl = blob.url;
 
-    // 2. Send email — image renders inline via https://, zero attachments
-    const { data, error } = await resend.emails.send({
-      from:     FROM_EMAIL,
-      to:       [safeTo],
-      reply_to: REPLY_TO,
-      subject:  `📮 A Postcard for you${safeRecipient ? ', ' + safeRecipient : ''} — PostCardiB`,
+    // 2. Send email
+    const emailPayload = {
+      from:    FROM_EMAIL,
+      to:      [safeTo],
+      subject: `📮 A Postcard for you${safeRecipient ? ', ' + safeRecipient : ''} — PostCardiB`,
       html:    buildEmailHTML({
         recipientName: safeRecipient,
         senderName:    safeSender,
@@ -101,8 +115,10 @@ module.exports = async function handler(req, res) {
         to:            safeTo,
         imageUrl:      blobUrl,
       }),
-    });
+    };
+    if (REPLY_TO) emailPayload.reply_to = REPLY_TO;
 
+    const { data, error } = await resend.emails.send(emailPayload);
     if (error) throw new Error(error.message);
 
     // 3. Delete blob after 1 hour (fire-and-forget)
@@ -118,13 +134,13 @@ module.exports = async function handler(req, res) {
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function sanitise(s = '') {
+function sanitise(s = '', maxLen = 100) {
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .slice(0, MAX_NAME_LEN);
+    .slice(0, maxLen);
 }
 
 function buildEmailHTML({ recipientName, senderName, message, to, imageUrl }) {
