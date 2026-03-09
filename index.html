@@ -170,63 +170,193 @@
       transform: rotate(45deg);
     }
 
-    /* ── UPLOAD ZONE ── */
+    /* ── ENVELOPE UPLOAD SCENE ── */
+    .env-scene {
+      max-width: 600px;
+      margin: 0 auto 48px;
+      perspective: 1100px;
+      perspective-origin: 50% 15%;
+    }
+    .env-body {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.65;
+      border: 7px solid transparent;
+      background:
+        linear-gradient(#FFF8EE, #FFF8EE) padding-box,
+        repeating-linear-gradient(-45deg, var(--red) 0 7px, var(--yellow) 7px 14px) border-box;
+      box-shadow: 0 14px 55px rgba(0,0,0,0.22), 0 4px 14px rgba(0,0,0,0.12);
+      transform-style: preserve-3d;
+    }
+    /* Inner lining diagonal stripe */
+    .env-lining {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(-45deg,
+        rgba(198,40,40,0.055) 0 3px, transparent 3px 10px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Upload card wrapper — rises out of envelope */
+    .env-card-wrap {
+      position: absolute;
+      left: 9%; right: 9%;
+      top: 10%; bottom: 8%;
+      z-index: 5;
+      transform: translateY(50%);
+      transition: transform 1s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .env-card-wrap.rising { z-index: 12; }
+    .env-card-wrap.risen  { transform: translateY(-22%); }
+    /* The upload zone card */
     .upload-zone {
-      border: 2.5px dashed var(--red);
-      background: rgba(255,255,255,0.8);
+      width: 100%; height: 100%;
+      border: 2.5px dashed #1565C0;
+      background: rgba(232,242,255,0.97);
       border-radius: 2px;
-      padding: 52px 40px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: all 0.25s;
-      margin-bottom: 40px;
+      transition: background 0.25s, border-color 0.25s;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.14);
+      text-align: center;
+      padding: 20px 28px;
     }
-    /* Airmail corner strips */
-    .upload-zone::before, .upload-zone::after {
+    /* Blue corner strips */
+    .upload-zone::before {
       content: '';
       position: absolute;
-      width: 60px; height: 60px;
-    }
-    .upload-zone::before {
       top: 0; left: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        var(--red)    0 6px,
-        var(--yellow) 6px 12px
-      );
+      width: 54px; height: 54px;
+      background: repeating-linear-gradient(-45deg,
+        #1565C0 0 6px, #90CAF9 6px 12px);
       clip-path: polygon(0 0, 100% 0, 0 100%);
     }
     .upload-zone::after {
+      content: '';
+      position: absolute;
       bottom: 0; right: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        var(--red)    0 6px,
-        var(--yellow) 6px 12px
-      );
+      width: 54px; height: 54px;
+      background: repeating-linear-gradient(-45deg,
+        #1565C0 0 6px, #90CAF9 6px 12px);
       clip-path: polygon(100% 0, 100% 100%, 0 100%);
     }
     .upload-zone:hover, .upload-zone.drag-over {
-      background: rgba(255,179,0,0.08);
-      border-color: var(--amber);
+      background: rgba(21,101,192,0.07);
+      border-color: #42A5F5;
     }
-    .upload-icon { font-size: 3.2rem; margin-bottom: 10px; }
-    .upload-zone p {
+    .upload-icon { font-size: 3rem; margin-bottom: 8px; line-height: 1; }
+    .upload-main {
       font-family: 'Special Elite', cursive;
-      color: var(--red);
-      font-size: 1rem;
+      color: #1565C0;
+      font-size: 0.98rem;
       letter-spacing: 1.5px;
+    }
+    .upload-sub {
+      font-family: 'Special Elite', cursive;
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 1px;
+      margin-top: 5px;
     }
     .upload-zone small {
       display: block;
-      margin-top: 6px;
-      font-size: 0.72rem;
+      margin-top: 9px;
+      font-size: 0.7rem;
       color: #9E9E9E;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       font-family: 'Special Elite', cursive;
     }
     #file-input { display: none; }
+    /* Envelope fold panels (decorative, sit in front of card's initial hidden state) */
+    .env-fold-left, .env-fold-right, .env-fold-bottom {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+    }
+    .env-fold-left {
+      clip-path: polygon(0 0, 0 100%, 50% 50%);
+      background: linear-gradient(135deg, #EDD8A6 0%, #F2E2BC 100%);
+      filter: drop-shadow(2px 0 4px rgba(0,0,0,0.1));
+    }
+    .env-fold-right {
+      clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+      background: linear-gradient(225deg, #E6CC98 0%, #F0DAAE 100%);
+      filter: drop-shadow(-2px 0 4px rgba(0,0,0,0.1));
+    }
+    .env-fold-bottom {
+      clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+      background: linear-gradient(0deg, #EDD095 0%, #F5E2BC 100%);
+    }
+    /* Envelope flap — 3D opens on load */
+    .env-flap-wrap {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 57%;
+      z-index: 10;
+      pointer-events: none;
+      transform-style: preserve-3d;
+    }
+    .env-flap {
+      width: 100%; height: 100%;
+      clip-path: polygon(0 0, 100% 0, 50% 80%);
+      background: linear-gradient(170deg, #F5E2B2 0%, #EAD08C 55%, #DCBA70 100%);
+      transform-origin: top center;
+      transform: rotateX(0deg);
+      transition: transform 1.15s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+    }
+    .env-flap.open { transform: rotateX(-172deg); }
+    /* Wax seal on the flap */
+    .env-seal {
+      position: absolute;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px; height: 28px;
+      background: radial-gradient(circle at 40% 35%, #E53935, var(--dark-red));
+      border-radius: 50%;
+      border: 1.5px solid #8B0000;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem;
+      color: var(--yellow);
+      font-family: 'Rozha One', serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+      z-index: 11;
+      pointer-events: none;
+    }
+    /* "PRIORITY POST" label on envelope face */
+    .env-label {
+      position: absolute;
+      bottom: 10px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Special Elite', cursive;
+      font-size: 0.55rem;
+      letter-spacing: 4px;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      z-index: 8;
+      pointer-events: none;
+      opacity: 0.4;
+      white-space: nowrap;
+    }
+    /* Below-envelope hint */
+    .env-hint {
+      text-align: center;
+      font-family: 'Special Elite', cursive;
+      color: var(--ink-soft);
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      margin-top: 14px;
+      opacity: 0;
+      transition: opacity 0.8s;
+    }
+    .env-hint.visible { opacity: 0.5; }
 
     /* ── POSTCARD STAGE ── */
     .postcard-stage {
@@ -843,11 +973,37 @@
     </div>
   </div>
 
-  <div class="upload-zone" id="upload-zone">
-    <div class="upload-icon">🏞️</div>
-    <p>Drop your photograph here &nbsp;·&nbsp; or click to browse</p>
-    <small>JPG, PNG, WEBP supported</small>
-    <input type="file" id="file-input" accept="image/*" />
+  <!-- ── ENVELOPE UPLOAD SCENE ── -->
+  <div class="env-scene" id="env-scene">
+    <div class="env-body">
+      <div class="env-lining"></div>
+
+      <!-- Card that rises from inside the envelope -->
+      <div class="env-card-wrap" id="env-card-wrap">
+        <div class="upload-zone" id="upload-zone">
+          <div class="upload-icon">📮</div>
+          <p class="upload-main">Slip your photograph inside</p>
+          <p class="upload-sub">drop it here &nbsp;·&nbsp; or click to browse</p>
+          <small>JPG &nbsp;·&nbsp; PNG &nbsp;·&nbsp; WEBP</small>
+          <input type="file" id="file-input" accept="image/*" />
+        </div>
+      </div>
+
+      <!-- Decorative envelope fold panels -->
+      <div class="env-fold-left"></div>
+      <div class="env-fold-right"></div>
+      <div class="env-fold-bottom"></div>
+
+      <!-- Flap (opens via 3D rotateX on page load) -->
+      <div class="env-flap-wrap">
+        <div class="env-flap" id="env-flap">
+          <div class="env-seal">✦</div>
+        </div>
+      </div>
+
+      <div class="env-label">PostCardiB &nbsp;·&nbsp; Priority Post</div>
+    </div>
+    <p class="env-hint" id="env-hint">✦ drop a photo or click to browse ✦</p>
   </div>
 
   <div class="postcard-stage" id="postcard-stage" style="display:none">
@@ -1399,6 +1555,16 @@
     });
   });
 
+  // ── ENVELOPE OPEN ANIMATION ───────────────────────────────────────
+  setTimeout(() => {
+    document.getElementById('env-flap').classList.add('open');
+    setTimeout(() => {
+      const wrap = document.getElementById('env-card-wrap');
+      wrap.classList.add('rising', 'risen');
+      document.getElementById('env-hint').classList.add('visible');
+    }, 720);
+  }, 520);
+
   // ── UPLOAD ────────────────────────────────────────────────────────
   const uploadZone = document.getElementById('upload-zone');
   const fileInput  = document.getElementById('file-input');
@@ -1426,7 +1592,7 @@
       img.src = currentImage;
       img.style.display = 'block';
       document.getElementById('front-placeholder').style.display = 'none';
-      uploadZone.style.display = 'none';
+      document.getElementById('env-scene').style.display = 'none';
       document.getElementById('postcard-stage').style.display = 'block';
       document.getElementById('flip-hint').style.display = 'block';
       document.getElementById('btn-flip').disabled = false;
